@@ -1,0 +1,15 @@
+<head>
+	<link rel="stylesheet" type="text/css" href="test.css">
+  </head> 
+<h2>All Users</h2>
+
+<ul>
+	{{#user}}
+	<li>
+		<h1>{{name}}: {{artist_name}}<br></h1> 
+			<img src="{{profile_pic}}" class="img-rounded"/><br>
+			<p class="about"> About:  {{about}}<br></p> 
+			<p>Email: {{email}}<br></p>
+	</li>
+	{{/user}}
+</ul>
