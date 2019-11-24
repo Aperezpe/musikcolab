@@ -19,10 +19,10 @@ const sequelize = new Sequelize({
 });
 
 // import models
-const User = sequelize.import("./User.js");
-const Album = sequelize.import("./Album.js");
-const Song = sequelize.import("./Song.js");
-const Song_likes = sequelize.import("./Song_likes.js");
+const User = sequelize.import("./user.js");
+const Album = sequelize.import("./album.js");
+const Song = sequelize.import("./song.js");
+const Song_likes = sequelize.import("./song_likes.js");
 
 module.exports = {
   User,

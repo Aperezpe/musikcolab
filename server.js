@@ -1,6 +1,6 @@
 // import the models
 // const { User } = require('./models');
- const { User,Album,Song,Song_likes } = require('./models');
+ const { User, Album , Song, Song_likes } = require('./models');
 
 const express = require('express');
 const path = require('path');
