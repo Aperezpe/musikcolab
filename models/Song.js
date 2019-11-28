@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('song', {
     id: {
       type: DataTypes.INTEGER,
@@ -9,7 +9,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     album_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'Album',
+        key: 'id'
+      }
     },
     length_track: {
       type: DataTypes.TEXT,
@@ -27,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    use: {
+    song_title: {
       type: DataTypes.TEXT,
       allowNull: true
     }

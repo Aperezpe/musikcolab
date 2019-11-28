@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('album', {
     id: {
       type: DataTypes.INTEGER,
@@ -19,11 +19,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    dowload_url: {
+    download_url: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    use: {
+    username: {
       type: DataTypes.TEXT,
       allowNull: true
     }
