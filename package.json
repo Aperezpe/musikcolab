@@ -1,33 +1,24 @@
 {
-  "name": "lab07-user-security-armaglz",
+  "name": "myapp",
   "version": "1.0.0",
-  "description": "The Port is \"3002\"<br>\r localhost:3002/<br>\r Armando Glz 11/21/19<br>\r -The data base/ models areready to use<br>\r -Some basic Routs are set up with no logic on it<br>",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/UTRGV-CS-3342/lab07-user-security-armaglz.git"
+    "_coment": "Esta linea abajo es la que hace la magia y puede usar nodemon",
+    "serve": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/UTRGV-CS-3342/lab07-user-security-armaglz/issues"
-  },
-  "homepage": "https://github.com/UTRGV-CS-3342/lab07-user-security-armaglz#readme",
   "dependencies": {
-    "bcrypt": "^3.0.7",
-    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "express-session": "^1.17.0",
-    "handlebars": "^4.5.3",
-    "sequelize": "^5.21.2",
+    "sequelize": "^5.19.6",
     "sequelize-auto": "^0.4.29",
     "sqlite3": "^4.1.0"
   },
-  "devDependencies": {},
-  "keywords": []
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
 }
