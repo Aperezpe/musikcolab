@@ -26,7 +26,11 @@ module.exports = function (sequelize, DataTypes) {
     username: {
       type: DataTypes.TEXT,
       allowNull: true
-    }
+    },
+    artist_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'album',
     timestamps: false
