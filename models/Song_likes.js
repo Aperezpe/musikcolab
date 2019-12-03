@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Song_likes', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define('song_likes', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'Song_likes',
+        model: 'song_likes',
         key: 'id'
       }
     },
@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'User',
+        model: 'user',
         key: 'id'
       }
     },
@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'Song_likes',
+    tableName: 'song_likes',
     timestamps: false
   });
 };
