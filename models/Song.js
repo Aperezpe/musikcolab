@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
         key: 'id'
       }
     },
-    length_track: {
+    duration: {
       type: DataTypes.TEXT,
       allowNull: true
     },

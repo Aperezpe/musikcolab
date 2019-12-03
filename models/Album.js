@@ -31,6 +31,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    album_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'album',
     timestamps: false
