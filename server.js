@@ -43,7 +43,33 @@ app.get('/login', function (req, res, next) {
 });
 
 app.post('/login', function (req, res, next) {
-  res.render("login");
+  let errors = []
+  if (req.body.username.length == 0 || req.body.pass.length == 0) {
+    errors.push({ msg: "Uername or Password Incorect!!!" })
+    res.render("login", { errors });
+  }
+  else {
+    User.findOne({ where: { username: req.body.username } }).then(user => {
+      if (user == null) {
+        errors.push({ msg: "Username or Password Incorect!!!" })
+        res.render("login", { errors });
+      }
+      else {
+        bcrypt.compare(req.body.pass, user.has_password).then(result => {
+
+          if (result) {
+            req.session.user = user;
+            res.redirect("/");
+          }
+
+          else {
+            errors.push({ msg: "Username or Password Incorect!!!" })
+            res.render("login", { errors });
+          }
+        })
+      }
+    });
+  }
 
 });
 
@@ -77,6 +103,7 @@ app.post('/register', function (req, res, next) {
 
         });
       }
+      req.session.user = user;
       res.redirect("/");
     }
     else if (req.body.username == n_user.username) {
@@ -104,7 +131,7 @@ app.get('/all_users', function (req, res, next) {
 
 //test
 app.get('/', function (req, res, next) {
-  res.render("home");
+  res.render("hola");
 
 });
 
