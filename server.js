@@ -1,5 +1,7 @@
-// import the models
-// const { User } = require('./models');
+
+// var foo = require('./static/cristovive.json');
+const fs = require('fs');
+
 const { User, Album, Song, Song_likes } = require('./models');
 
 const express = require('express');
@@ -33,16 +35,32 @@ app.use(session({ secret: "This is a big long secret lama string." }));
 // setup static file service
 app.use(express.static(path.join(__dirname, 'static')));
 
-// Display 
-app.get('/:username', function (req, res, next) {
+// Display artist's album based on 'Album username'
+app.get('/album/:username', function (req, res, next) {
+  let pageTitle = ""
   Album.findOne({
     where: {
       username: req.params.username
     },
     include: [{ model: Song, as: 'Songs' }]
   }).then(db_data => {
-    res.render("artist_page", { data: db_data });
+
+    if (db_data) {
+      pageTitle = db_data.artist_name + " | " + db_data.album_name
+    }
+
+    res.render("artist_page", {
+      data: db_data,
+      title: db_data ? pageTitle : ""
+    });
   });
+});//END route '/album/:username'
+//------------------------------------------------------
+
+app.get('/testing', function (req, res, next) {
+  // let rawdata = fs.readFileSync('./static/cristovive.json');
+  // let student = JSON.parse(rawdata)
+  res.render('test')
 });
 
 
