@@ -19,14 +19,22 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    dowload_url: {
+    download_url: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    use: {
+    username: {
       type: DataTypes.TEXT,
       allowNull: true
-    }
+    },
+    artist_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    album_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'album',
     timestamps: false

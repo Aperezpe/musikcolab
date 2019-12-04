@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
+    artist_name: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    artist_name: {
+    username: {
       type: DataTypes.TEXT,
       allowNull: true
     },
