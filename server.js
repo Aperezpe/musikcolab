@@ -39,33 +39,155 @@ app.use(session({ secret: "This is a big long secret lama string." }));
 app.use(express.static(path.join(__dirname, 'static')));
 
 
+//ARMANDOS-----------------------------------------------------
 //Log in get and post
 app.get('/login', function (req, res, next) {
 
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
 
-  res.render("login");
+  if (req.session.curUser) {
+    res.redirect("/profile")
+  }
+
+  else
+    res.render("login");
 
 });
 
 app.post('/login', function (req, res, next) {
 
+  let errors = []
+  if (req.body.username.length == 0 || req.body.pass.length == 0) {
+    errors.push({ msg: "Uername or Password Incorect!!!" })
+    res.render("login", { errors });
+  }
+  else {
+    User.findOne({ where: { username: req.body.username } }).then(user => {
+      if (user == null) {
+        errors.push({ msg: "Username or Password Incorect!!!" })
+        res.render("login", { errors });
+      }
+      else {
+        bcrypt.compare(req.body.pass, user.has_password).then(result => {
 
+          if (result) {
+            req.session.curUser = {}
+            req.session.curUser["username"] = user.username;
+            res.redirect("/profile");
+          }
 
-  res.render("login");
+          else {
+            errors.push({ msg: "Username or Password Incorect!!!" })
+            res.render("login", { errors });
+          }
+        })
+      }
+    });
+  }
 
 });
+
 
 
 //Register get and post page 
 app.get('/register', function (req, res, next) {
-  res.render("register");
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
+  else
+    res.render("register");
 
 });
 
+//REGISTER USER
 app.post('/register', function (req, res, next) {
-  res.render("register");
+  var errors = []
+  var isTaken = false;
+  var matched = false;
+  // res.send(req.body.password.trim())
+  User.findAll({                     //Db query: check if username exists
+    where: {
+      username: req.body.username.trim()
+    }
+  }).then(user => {
+    if (user.length > 0) {
+      isTaken = true;
+    }
+    if (isTaken) { //if user isTaken, push error to array
+      errors.push("Username is already taken");
+    }
+    //if username is blank, push error to array
+    if (req.body.username.trim().length === 0) {
+      errors.push('Username cannot be blank');
+    }
+    //if password length < 4, push error
+    if (req.body.password.length < 4) {
+      errors.push("Password must be at least 4 characters long");
+    }
+    //if errors exist
+    if (errors.length > 0) {
+      res.render('register', {
+        errors: errors,
+        propagate_username: req.body.username.trim()
+      });
+      return;
+    } else {
+      //bcrypt password hashing function 
+      // console.log('erwer')
 
-});
+      // console.log('test')
+
+      var hash_pass = bcrypt.hashSync(req.body.password, 10)
+      // req.session.hash = hash;
+      // req.session.user = req.body.username.trim(),
+      //CREATE new user,
+      //THEN redirect user to 'home' view
+
+      //Problem was allowNull D: idk why
+      User.create({
+        artist_name: req.body.artistname,
+        username: req.body.username,
+        email: req.body.email,
+        has_password: hash_pass,
+        admin: false
+      },
+      ).then(newUser => {
+        //console.log("FUCK")
+
+        console.log("newUser id:" + newUser.id)
+        req.session.curUser = {}
+        req.session.curUser["username"] = newUser.username
+
+        res.redirect("/profile");
+
+        // Album.create({
+        //   username: newUser.username
+        // })
+        //   .then(newAlbum => {
+        //     req.session.curUser = {}
+        //     req.session.curUser["username"] = newUser.username
+        //     res.redirect("/profile");
+        //   })
+        //   .catch(err => console.log(err))
+
+      })
+        .catch(err => console.log(err))
+      //END create-user ;
+
+      ///res.redirect("/profile");
+    }
+  });
+  //END create-user function
+});//END bcrypt.hash function
+//END IF-ELSE (If errors exist, Else: no errors )
+//D Armando's
+//==============================================================
 
 
 // Display all teh users just for testing
@@ -97,6 +219,13 @@ app.post('/where', function (req, res, next) {
 
 });
 
+app.get('/logout', function (req, res) {
+
+  req.session.destroy()
+
+  res.redirect("/login")
+})
+
 app.get('/create_session', function (req, res, next) {
 
   req.session.curUser = {}
@@ -122,20 +251,17 @@ app.get('/create_session', function (req, res, next) {
 app.get('/profile', function (req, res) {
 
   successMsg = ""
+  anchor = ""
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
   var username = req.session.curUser["username"]
 
-  if (!username) {
-    res.render('profile')
-    return;
-  }
-
   if (req.query.success == "info") {
+    anchor = "anchor-bottom"
     successMsg = "You have updated your profile information"
   } else if (req.query.success == "true") {
     successMsg = "You have updated your profile picture"
@@ -160,7 +286,8 @@ app.get('/profile', function (req, res) {
       username: user.name,
       email: user.email,
       about: user.about,
-      id: user.id
+      id: user.id,
+      anchor: anchor
     })
   });
 
@@ -199,8 +326,8 @@ app.post('/profile/:id', function (req, res) {
 /////UPDATE IMAGE URL ///////
 app.post('/update_profile_img', function (req, res, next) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -208,7 +335,7 @@ app.post('/update_profile_img', function (req, res, next) {
   var new_image_url = req.body.image_url
 
   User.findOne({
-    where: { username : username }
+    where: { username: username }
   }).then(function (user) {
     user.update({ profile_pic: new_image_url }).then(function (user) {
 
@@ -217,7 +344,7 @@ app.post('/update_profile_img', function (req, res, next) {
       } else {
         res.session.errors = []
         res.session.errors.push("There was an error uploading the image")
-        res.redirect('profile')
+        res.redirect('/profile')
 
       }
     })
@@ -230,8 +357,8 @@ app.post('/update_profile_img', function (req, res, next) {
 
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
   var username = req.session.curUser["username"]
@@ -271,8 +398,8 @@ app.get('/update_json_songs', function (req, res) {
 // UPDATE ALBUM COVER
 app.post('/update_album_cover', function (req, res, next) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -289,6 +416,9 @@ app.post('/update_album_cover', function (req, res, next) {
     }
   })
     .then(album => {
+
+
+
       album.update({ album_cover: new_image_url })
         .then(function (album) {
           if (album.album_cover == new_image_url) {
@@ -316,8 +446,8 @@ app.post('/update_album_cover', function (req, res, next) {
 //Update album information
 app.post('/profile-album/:id', function (req, res) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -346,11 +476,15 @@ app.post('/profile-album/:id', function (req, res) {
 
     // })
 
-    Album.findAll({
-      where: { id: album_id }
+
+    Album.findOne({
+      where: { id: album_id },
+      include: [{ model: Song, as: 'Songs' }]
     }).then(album => {
 
-      album[0].update({
+      //console.log(JSON.stringify(album, null, 4))
+
+      album.update({
         artist_name: req.body.artist_name,
         album_name: req.body.album_name,
         username: req.body.username,
@@ -359,8 +493,20 @@ app.post('/profile-album/:id', function (req, res) {
         console.log(JSON.stringify(album, null, 4))
         console.log("si jalo!!")
         //res.redirect('/profile-album')
+
+
+
       })
 
+      Song.bulkCreate(req.session.song_list, { returning: true }).then(function () {
+        console.log("Songs successfully created")
+      })
+        .catch(err => console.log(err))
+
+
+
+
+      console.log('Routing TO: /profile-album?success=album')
       res.redirect('/profile-album?success=album')
       // album.update({
       //   artist_name: req.body.artist_name,
@@ -372,6 +518,7 @@ app.post('/profile-album/:id', function (req, res) {
       //   res.redirect('/profile-album')
       // })
     })
+      .catch(err => console.log(err))
 
     // if(album_promise&&song_promise){
     //   res.redirect("/profile-album")
@@ -390,16 +537,16 @@ app.get('/profile-album', function (req, res) {
   //   console.log('Your file is ' + duration + ' minutes long');
   // });
   successMsg = ""
-  albumSuccessMsg= ""
+  albumSuccessMsg = ""
   anchor = ""
   console.log("success: " + req.query.success)
 
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
-  console.log(req.query.success)
+  //console.log(req.query.success)
 
   if (req.query.success != "song") {
     if (req.session.song_list != undefined) {
@@ -409,12 +556,13 @@ app.get('/profile-album', function (req, res) {
   }
 
   if (req.query.success == "song") {
-    console.log("cool song!!")
+    console.log("updating songs...")
     successMsg = "The song was successfully added"
     anchor = "anchor-songs"
-  }else if(req.query.albumSuccess == "album"){
-    console.log("cool album!!")
-    albumSuccessMsg = "Your album was successfully updated"
+  } else if (req.query.success == "album") {
+    console.log("updating album...")
+    anchor = "anchor-songs"
+    successMsg = "Your album was successfully updated"
   }
 
   var username = req.session.curUser["username"]
@@ -431,6 +579,22 @@ app.get('/profile-album', function (req, res) {
   }).then(user => {
 
     var album = user.Albums[0]
+
+    if (!album) {
+
+      Album.create({
+        user_id: user.id,
+        username: user.username
+      }).then(album => {
+        console.log("Successfully created album!")
+        res.redirect('profile')
+        return;
+      })
+        .catch(err => console.log(err))
+
+      return;
+    }
+
     var songs = user.Albums[0]["Songs"]
 
     if (album.album_cover == null) {
@@ -457,11 +621,12 @@ app.get('/profile-album', function (req, res) {
       album: album,
       songs: songs,
       successMsg: successMsg,
-      albumSuccessMsg : albumSuccessMsg,
+      albumSuccessMsg: albumSuccessMsg,
       songs_list: req.session.song_list
     })
 
   })
+    .catch(err => console.log(err))
 
 });
 
@@ -471,8 +636,8 @@ app.get('/profile-album', function (req, res) {
 /////UPLOAD NEW SONG
 app.post("/upload_song/:album_id", function (req, res) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
