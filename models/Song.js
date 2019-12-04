@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     duration: {
-      type: DataTypes.DOUBLE,
+      type: DataTypes.TEXT,
       allowNull: true
     },
     song_url: {

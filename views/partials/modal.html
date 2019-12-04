@@ -22,7 +22,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/update_album_cover" method="POST">
+                    <form action="/{{modal_route}}" method="POST">
                         <div class="form-group row">
                             <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Image
                                 URL</label>
@@ -47,7 +47,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content song-upload-modal">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Upload Song </h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Song</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -73,7 +73,7 @@
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <button type="submit" class="btn btn-success">Add</button>
                         </div>
                     </form>
                 </div>

@@ -17,65 +17,41 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Musikcolab</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    {{>navbar}}
+    {{>modal}}
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/profile?user_id={{id}}">Profile<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile-album?user_id={{id}}">Album</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/create_session">Login</a>
-                </li>
-
-            </ul>
-
-        </div>
-    </nav>
-
-    {{#if success}}
+    {{#if successMsg}}
     <div class="alert alert-success" id="success-alert">
         <button type="button" class="close" data-dismiss="alert">x</button>
-        <strong>Success!</strong> The image was successfully updated
+        <strong>Success!</strong> {{successMsg}}
     </div>
     {{/if}}
 
-    
+
 
     <!-- Button trigger modal -->
     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
         Launch demo modal
     </button> -->
-
+    <div class="jumbotron">
+        <h1>Hello, {{artist_name}}</h1>
+    </div>
     <div class="container">
-        <div class="jumbotron">
-            <h1>Hello, {{artist_name}}</h1>
-        </div>
+
 
         <div class="pro-img">
             <a href='#'>
                 <img data-toggle="modal" data-target="#exampleModalCenter" src="{{profile_pic}}" alt=""
                     class="clip-circle">
-               
-
             </a>
 
         </div>
 
-        <form>
+        <form action="/profile/{{id}}" method="POST">
             <div class="form-group row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Artis Name</label>
                 <div class="col-sm-10">
-                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{artist_name}}">
+                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{artist_name}}" name="artist_name">
                 </div>
             </div>
             <!-- <div class="form-group row">
@@ -87,12 +63,12 @@
             <div class="form-group row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Email</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control form-control-lg" id="colFormLabelLg" value="{{email}}">
+                    <input name="email" type="email" class="form-control form-control-lg" id="colFormLabelLg" value="{{email}}">
                 </div>
             </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1" class="col-form-label-lg">About</label>
-                <textarea rows="10" class="form-control" id="exampleFormControlTextarea1" rows="3">{{about}}</textarea>
+                <textarea name="about" rows="10" class="form-control" id="exampleFormControlTextarea1" rows="3">{{about}}</textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>

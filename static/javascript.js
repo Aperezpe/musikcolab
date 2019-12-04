@@ -14,6 +14,12 @@ $(document).ready(function () {
         // $("body").append().text("{{>modal}}")
     });
 });
+
+
+
+// if anchor
+//     script.
+//         window.onload = window.location.hash = '#{anchor}';
 // const $tableID = $('#table');
 // const $BTN = $('#export-btn');
 // const $EXPORT = $('#export');
