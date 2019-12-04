@@ -219,6 +219,8 @@ app.post('/where', function (req, res, next) {
 
 });
 
+///////////////ABRAHAM1///////////////////
+
 app.get('/logout', function (req, res) {
 
   req.session.destroy()
@@ -247,6 +249,7 @@ app.get('/create_session', function (req, res, next) {
 
 });
 
+///////////////ABRAHAM2///////////////////
 /// Get profile of logged in user
 app.get('/profile', function (req, res) {
 
@@ -293,6 +296,7 @@ app.get('/profile', function (req, res) {
 
 });
 
+///////////////ABRAHAM3///////////////////
 //Udate profile information
 app.post('/profile/:id', function (req, res) {
 
@@ -323,6 +327,8 @@ app.post('/profile/:id', function (req, res) {
 
 //https://images.ctfassets.net/usf1vwtuqyxm/3SQ3X2km8wkQIsQWa02yOY/8801d7055a3e99dae8e60f54bb4b1db8/HarryPotter_WB_F4_HarryPotterMidshot_Promo_080615_Port.jpg?w=914
 
+
+///////////////ABRAHAM4///////////////////
 /////UPDATE IMAGE URL ///////
 app.post('/update_profile_img', function (req, res, next) {
 
@@ -355,6 +361,7 @@ app.post('/update_profile_img', function (req, res, next) {
 });
 
 
+///////////////ABRAHAM5///////////////////
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
   if (!req.session.curUser) {
@@ -395,6 +402,7 @@ app.get('/update_json_songs', function (req, res) {
 
 
 
+///////////////ABRAHAM6///////////////////
 // UPDATE ALBUM COVER
 app.post('/update_album_cover', function (req, res, next) {
 
@@ -442,6 +450,7 @@ app.post('/update_album_cover', function (req, res, next) {
 });
 
 
+///////////////ABRAHAM7///////////////////
 /////CRUD profile album////
 //Update album information
 app.post('/profile-album/:id', function (req, res) {
@@ -531,6 +540,8 @@ app.post('/profile-album/:id', function (req, res) {
 
 });
 
+
+///////////////ABRAHAM8///////////////////
 app.get('/profile-album', function (req, res) {
   // mp3Duration('https://musikcolab.s3.amazonaws.com/01_Heroe+(feat.+Sesi).mp3', function (err, duration) {
   //   if (err) return console.log(err.message);
@@ -632,7 +643,7 @@ app.get('/profile-album', function (req, res) {
 
 
 
-
+///////////////ABRAHAM9///////////////////
 /////UPLOAD NEW SONG
 app.post("/upload_song/:album_id", function (req, res) {
 
