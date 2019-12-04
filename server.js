@@ -1,7 +1,3 @@
-// import the models
-// const { User } = require('./models');
-// 'use strict'
-
 const { User, Album, Song, Song_likes } = require('./models');
 
 const express = require('express');
@@ -14,7 +10,7 @@ var mp3Duration = require('mp3-duration');
 //var jquery = require('jquery')
 
 app = express();
-app.set('port', 3002);
+app.set('port', 3001);
 
 // setup handlebars and the view engine for res.render calls
 // (more standard to use an extension like 'hbs' rather than
@@ -39,10 +35,38 @@ app.use(session({ secret: "This is a big long secret lama string." }));
 app.use(express.static(path.join(__dirname, 'static')));
 
 
+// Display artist's album based on 'Album username'
+app.get('/album/:username', function (req, res, next) {
+  let pageTitle = ""
+  // res.end(req.params.username)
+  Album.findOne({
+    where: {
+      username: req.params.username
+    },
+    include: [{ model: Song, as: 'Songs' }]
+  }).then(db_data => {
+
+    if (db_data) {
+      pageTitle = db_data.artist_name + " | " + db_data.album_name
+    }
+
+    res.render("artist_page", {
+      data: db_data,
+      title: db_data ? pageTitle : ""
+    });
+  });
+});//END route '/album/:username'
+//===============================================================
+
+app.get('/testing', function (req, res, next) {
+  // let rawdata = fs.readFileSync('./static/cristovive.json');
+  // let student = JSON.parse(rawdata)
+  res.render('test')
+});
+
 //ARMANDOS-----------------------------------------------------
 //Log in get and post
 app.get('/login', function (req, res, next) {
-
   if (req.session.user) {
     if (req.session.user.admin == 0 || req.session.user.admin == 1) {
       res.redirect("/")
@@ -189,6 +213,146 @@ app.post('/register', function (req, res, next) {
 //D Armando's
 //==============================================================
 
+//Udate profile information
+app.post('/profile/:id', function (req, res) {
+
+  var user_id = req.params.id
+  var new_artist_name = req.body.artist_name
+  var new_email = req.body.email
+  var new_about = req.body.about
+
+  User.findOne({
+    where: { id: user_id }
+  })
+    .then(function (user) {
+
+      user.update({
+        artist_name: new_artist_name,
+        email: new_email,
+        about: new_about
+      })
+        .then(user => {
+          console.log(JSON.stringify(user, null, 4))
+        })
+
+    })
+
+  console.log("about: " + req.body.about + " for user " + user_id)
+  res.redirect('/profile?success=info')
+})
+
+/////UPDATE IMAGE URL ///////
+app.post('/update_profile_img', function (req, res, next) {
+
+  if (!req.session.curUser["username"]) {
+    res.send("No user")
+    return;
+  }
+
+  var username = req.session.curUser["username"]
+  var new_image_url = req.body.image_url
+
+  User.findOne({
+    where: { username: username }
+  }).then(function (user) {
+    user.update({ profile_pic: new_image_url }).then(function (user) {
+
+      if (user.profile_pic == new_image_url) {
+        res.redirect('profile?success=true')
+      } else {
+        res.session.errors = []
+        res.session.errors.push("There was an error uploading the image")
+        res.redirect('profile')
+
+      }
+    })
+
+  })
+
+
+});
+
+
+////THIS WILL BE DONE ONLY ONCE/////
+app.get('/update_json_songs', function (req, res) {
+  if (!req.session.curUser["username"]) {
+    res.send("User needs to logg in")
+    return;
+  }
+  var username = req.session.curUser["username"]
+
+  User.findOne({
+    where: {
+      username: username
+    },
+    include: [
+      { model: Album, as: 'Albums', include: { model: Song, as: 'Songs' } }
+    ],
+
+  }).then(user => {
+
+    var album = user.Albums[0]
+    var s = user.Albums[0]["Songs"]
+
+    var songs = []
+    for (var i = 0; i < s.length; ++i) {
+      songs.push({ "url": s[i]["song_url"] })
+    }
+    console.log(songs)
+
+    let data = JSON.stringify(songs, null, 2);
+    fs.writeFileSync(`static/album/${album.username}.json`, data);
+
+    res.send(JSON.stringify(songs, null, 4))
+
+  })
+
+
+})
+
+
+
+
+// UPDATE ALBUM COVER
+app.post('/update_album_cover', function (req, res, next) {
+
+  if (!req.session.curUser["username"]) {
+    res.send("No user")
+    return;
+  }
+
+  var username = req.session.curUser["username"]
+  var new_image_url = req.body.image_url
+
+  console.log(req.body.image_url)
+
+  //https://musikcolab.s3.amazonaws.com/img_covers/gabe-album.jpg
+
+  Album.findOne({
+    where: {
+      username: username
+    }
+  })
+    .then(album => {
+      album.update({ album_cover: new_image_url })
+        .then(function (album) {
+          if (album.album_cover == new_image_url) {
+            //res.session.success = true
+
+            res.redirect('profile-album?success=true')
+
+            //res.send('profile-album')
+          } else {
+            res.session.errors = []
+            res.session.errors.push("There was an error uploading the image")
+            console.log("there was an error uploading the image!! DDD:")
+            res.redirect('profile-album')
+
+          }
+        })
+    })
+
+
 
 // Display all teh users just for testing
 app.get('/all_users', function (req, res, next) {
@@ -215,6 +379,35 @@ app.post('/where', function (req, res, next) {
   else if (req.body.b == "reg")
     res.redirect("/register");
 
+    if (album.album_cover == null) {
+      album.album_cover = "http://cdn.last.fm/flatness/responsive/2/noimage/default_album_300_g4.png";
+    }
+
+    //Every time I get the songs, update json file
+
+    if (songs.length > 0) {
+
+      req.session.songs = []
+      for (var i = 0; i < songs.length; ++i)
+        req.session.songs.push(songs[i])
+      console.log(req.session.songs.length)
+      // console.log(JSON.stringify(req.session.songs, null, 4))
+
+    }
+
+    res.render('profile-album', {
+      modal_route: "update_album_cover",
+      anchor: anchor,
+      albumActive: "active",
+      user: user,
+      album: album,
+      songs: songs,
+      successMsg: successMsg,
+      albumSuccessMsg: albumSuccessMsg,
+      songs_list: req.session.song_list
+    })
+
+  })
 
 
 });
@@ -666,6 +859,7 @@ var server = app.listen(app.get('port'), function () {
   console.log("Server started...")
 });
 
+//------------------------------------
 
 
 

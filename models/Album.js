@@ -1,6 +1,6 @@
 /* jshint indent: 2 */
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('album', {
     id: {
       type: DataTypes.INTEGER,
@@ -38,7 +38,15 @@ module.exports = function(sequelize, DataTypes) {
     album_name: {
       type: DataTypes.TEXT,
       allowNull: true
-    }
+    },
+    artist_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    album_name: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     tableName: 'album',
     timestamps: false

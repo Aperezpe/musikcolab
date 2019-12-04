@@ -1,0 +1,48 @@
+.thumb {
+  width: 50px;
+}
+
+.full {
+  width: 1500000000000000000000000000px;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.price {
+  text-align: right;
+}
+
+.error {
+  color: red;
+  font-style: italic;
+}
+
+.dl-all {
+  text-align: center;
+  text-decoration: none;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 1.2rem;
+  color: #fff;
+  background: #105ba9;
+  padding: 10px;
+  width: 100%;
+  display: inline-block;
+  white-space: nowrap;
+  /* -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px; */
+  /* margin: 10px 0; */
+  -webkit-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.dl-all:hover {
+  background: #1e6cbd;
+  text-decoration: none;
+  color: white;
+}
