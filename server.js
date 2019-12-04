@@ -161,10 +161,11 @@ app.post('/register', function (req, res, next) {
             artist_name: req.body.artistname.trim(),
             username: req.body.username.trim(),
             email: req.body.email.trim(),
-            password: hash, // bcrypt.hashSync(pw, 10)
+            has_password: hash, // bcrypt.hashSync(pw, 10)
             'admin': false
           }).then(newUser => {
-            res.render("login");
+            req.session.user = newUser;
+            res.render("/");
           });//END create-user function
       });//END bcrypt.hash function
     }//END IF-ELSE (If errors exist, Else: no errors )
@@ -583,14 +584,27 @@ app.post("/upload_song/:album_id", function (req, res) {
   //   res.send(JSON.stringify(newSong, null, 4))
   // })
 
-
-
-
-
-
 })
 
 
+app.get("/", function (req, res) { ///Home Page 
+  res.render("home");
+});
+
+app.get("/all_users", function (req, res, next) {
+  if (req.session.user) {
+    if (req.session.user.admin) {
+      User.findAll().then(user => {
+        res.render("test", { user: user });
+      });
+    } else res.redirect("/login");
+  } else res.redirect("/login");
+});
+app.get("/logout", (req, res) => {
+  // remove user from session
+  delete req.session.user;
+  res.redirect("/");
+});
 
 var server = app.listen(app.get('port'), function () {
   console.log("Server started...")
