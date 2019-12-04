@@ -35,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 // Display artist's album based on 'Album username'
 app.get('/album/:username', function (req, res, next) {
   let pageTitle = ""
+  // res.end(req.params.username)
   Album.findOne({
     where: {
       username: req.params.username
@@ -124,6 +125,7 @@ app.post('/register', function (req, res, next) {
   var errors = []
   var isTaken = false;
   var matched = false;
+  // res.send(req.body.password.trim())
   User.findAll({                     //Db query: check if username exists
     where: {
       username: req.body.username.trim()
@@ -152,25 +154,30 @@ app.post('/register', function (req, res, next) {
       return;
     } else {
       //bcrypt password hashing function 
-      bcrypt.hash(req.body.password, 10, (err, hash) => {
-        req.session.hash = hash;
-        req.session.user = req.body.username.trim(),
-          //CREATE new user,
-          //THEN redirect user to 'home' view
-          User.create({
-            artist_name: req.body.artistname.trim(),
-            username: req.body.username.trim(),
-            email: req.body.email.trim(),
-            password: hash, // bcrypt.hashSync(pw, 10)
-            'admin': false
-          }).then(newUser => {
-            res.render("login");
-          });//END create-user function
-      });//END bcrypt.hash function
-    }//END IF-ELSE (If errors exist, Else: no errors )
-  });//END Users.findAll call to check if Username exits
-});
-//END Armando's
+      console.log('erwer')
+
+      console.log('test')
+      // req.session.hash = hash;
+      // req.session.user = req.body.username.trim(),
+      //CREATE new user,
+      //THEN redirect user to 'home' view
+      User.create({
+        artist_name: req.body.artistname,
+        username: req.body.username,
+        email: req.body.email,
+        has_password: bcrypt.hashSync(req.body.password, 10),//bcrypt.hashSync(req.body.password, 10),
+        admin: false
+      }).then(newUser => {
+        req.session.curUser = {}
+        req.session.curUser["username"] = newUser.username
+        res.redirect("/profile");
+      });//END create-user ;
+    }
+  });
+  //END create-user function
+});//END bcrypt.hash function
+//END IF-ELSE (If errors exist, Else: no errors )
+//D Armando's
 //==============================================================
 
 //ABRAHAMS------------------------------------------------------
@@ -200,14 +207,14 @@ app.get('/profile', function (req, res) {
 
   successMsg = ""
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
-  if (!user_id) {
+  if (!username) {
     res.render('profile')
     return;
   }
@@ -221,7 +228,7 @@ app.get('/profile', function (req, res) {
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     }
   }).then(user => {
 
@@ -274,16 +281,16 @@ app.post('/profile/:id', function (req, res) {
 /////UPDATE IMAGE URL ///////
 app.post('/update_profile_img', function (req, res, next) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var new_image_url = req.body.image_url
 
   User.findOne({
-    where: { id: user_id }
+    where: { username: username }
   }).then(function (user) {
     user.update({ profile_pic: new_image_url }).then(function (user) {
 
@@ -305,15 +312,15 @@ app.post('/update_profile_img', function (req, res, next) {
 
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     },
     include: [
       { model: Album, as: 'Albums', include: { model: Song, as: 'Songs' } }
@@ -346,12 +353,12 @@ app.get('/update_json_songs', function (req, res) {
 // UPDATE ALBUM COVER
 app.post('/update_album_cover', function (req, res, next) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var new_image_url = req.body.image_url
 
   console.log(req.body.image_url)
@@ -360,7 +367,7 @@ app.post('/update_album_cover', function (req, res, next) {
 
   Album.findOne({
     where: {
-      user_id: user_id
+      username: username
     }
   })
     .then(album => {
@@ -391,12 +398,12 @@ app.post('/update_album_cover', function (req, res, next) {
 //Update album information
 app.post('/profile-album/:id', function (req, res) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var album_id = req.params.id
 
   // req.session.song_list.push({
@@ -469,7 +476,7 @@ app.get('/profile-album', function (req, res) {
   anchor = ""
   console.log("success: " + req.query.success)
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
@@ -488,18 +495,20 @@ app.get('/profile-album', function (req, res) {
     albumSuccessMsg = "Your album was successfully updated"
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     },
     include: [
       { model: Album, as: 'Albums', include: { model: Song, as: 'Songs' } }
     ],
 
   }).then(user => {
+
+    console.log(JSON.stringify(user, null, 4))
 
     var album = user.Albums[0]
     var songs = user.Albums[0]["Songs"]
@@ -542,12 +551,12 @@ app.get('/profile-album', function (req, res) {
 /////UPLOAD NEW SONG
 app.post("/upload_song/:album_id", function (req, res) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var album_id = req.params.album_id
 
   if (!req.session.song_list) {

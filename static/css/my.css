@@ -31,25 +31,27 @@
 .card-title {
   color: white;
   text-align: center;
-  padding-bottom: 8px;
-  padding-top: 8px;
+  padding-bottom: 0px;
+  padding-top: 0px;
 }
 
 .card-body {
-  padding-top: 12px;
+  padding-top: 0px;
   padding-left: 40px;
   padding-right: 40px;
 }
 
 .btn-primary {
   width: 100%;
+  font-size: 1.1rem;
 }
 
 .signup-text {
-  font-size: 0.8rem;
+  font-size: 1em;
   color: white;
   text-align: center;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
+  padding-right: 0.4rem;
 }
 
 #login-link {
@@ -65,7 +67,11 @@
   min-width: 50px;
   text-align: center;
 }
-#logo {
-  align-content: center;
+
+#img-size {
+  width: 15.5rem;
+  /* background-color: aqua; */
+  margin-top: 1.2rem;
+  margin-bottom: 1rem;
   width: 50%;
 }
