@@ -100,12 +100,12 @@ app.post('/where', function (req, res, next) {
 app.get('/create_session', function (req, res, next) {
 
   req.session.curUser = {}
-  req.session.curUser["id"] = 2
-  console.log("user_id:" + req.session.curUser["id"])
+  req.session.curUser["username"] = "abe123"
+  console.log("user_id:" + req.session.curUser["username"])
 
   User.findOne({
     where: {
-      id: req.session.curUser["id"]
+      username: req.session.curUser["username"]
     }
   }).then(user => {
 
@@ -123,14 +123,14 @@ app.get('/profile', function (req, res) {
 
   successMsg = ""
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
-  if (!user_id) {
+  if (!username) {
     res.render('profile')
     return;
   }
@@ -144,7 +144,7 @@ app.get('/profile', function (req, res) {
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     }
   }).then(user => {
 
@@ -199,16 +199,16 @@ app.post('/profile/:id', function (req, res) {
 /////UPDATE IMAGE URL ///////
 app.post('/update_profile_img', function (req, res, next) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var new_image_url = req.body.image_url
 
   User.findOne({
-    where: { id: user_id }
+    where: { username : username }
   }).then(function (user) {
     user.update({ profile_pic: new_image_url }).then(function (user) {
 
@@ -230,15 +230,15 @@ app.post('/update_profile_img', function (req, res, next) {
 
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     },
     include: [
       { model: Album, as: 'Albums', include: { model: Song, as: 'Songs' } }
@@ -271,12 +271,12 @@ app.get('/update_json_songs', function (req, res) {
 // UPDATE ALBUM COVER
 app.post('/update_album_cover', function (req, res, next) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var new_image_url = req.body.image_url
 
   console.log(req.body.image_url)
@@ -285,7 +285,7 @@ app.post('/update_album_cover', function (req, res, next) {
 
   Album.findOne({
     where: {
-      user_id: user_id
+      username: username
     }
   })
     .then(album => {
@@ -316,12 +316,12 @@ app.post('/update_album_cover', function (req, res, next) {
 //Update album information
 app.post('/profile-album/:id', function (req, res) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var album_id = req.params.id
 
   // req.session.song_list.push({
@@ -394,10 +394,12 @@ app.get('/profile-album', function (req, res) {
   anchor = ""
   console.log("success: " + req.query.success)
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("User needs to logg in")
     return;
   }
+
+  console.log(req.query.success)
 
   if (req.query.success != "song") {
     if (req.session.song_list != undefined) {
@@ -407,18 +409,20 @@ app.get('/profile-album', function (req, res) {
   }
 
   if (req.query.success == "song") {
+    console.log("cool song!!")
     successMsg = "The song was successfully added"
     anchor = "anchor-songs"
   }else if(req.query.albumSuccess == "album"){
+    console.log("cool album!!")
     albumSuccessMsg = "Your album was successfully updated"
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
 
 
   User.findOne({
     where: {
-      id: user_id
+      username: username
     },
     include: [
       { model: Album, as: 'Albums', include: { model: Song, as: 'Songs' } }
@@ -467,12 +471,12 @@ app.get('/profile-album', function (req, res) {
 /////UPLOAD NEW SONG
 app.post("/upload_song/:album_id", function (req, res) {
 
-  if (!req.session.curUser["id"]) {
+  if (!req.session.curUser["username"]) {
     res.send("No user")
     return;
   }
 
-  var user_id = req.session.curUser["id"]
+  var username = req.session.curUser["username"]
   var album_id = req.params.album_id
 
   if (!req.session.song_list) {
@@ -487,31 +491,9 @@ app.post("/upload_song/:album_id", function (req, res) {
     "song_url": req.body.song_url,
   })
 
-  res.redirect('/profile-album?albumSuccess=song')
+  res.redirect('/profile-album?success=song')
 
   console.log(req.session.song_list)
-
-
-  // req.session.song_list = [{}]
-
-
-  // Song.create({
-  //   song_title: req.body.song_title,
-  //   album_id: album_id,
-  //   duration: "0:00",
-  //   song_url: req.body.song_url,
-  //   like_count: 0
-
-  // })
-  // .then(newSong=>{
-  //   //console.log()
-  //   res.send(JSON.stringify(newSong, null, 4))
-  // })
-
-
-
-
-
 
 })
 
