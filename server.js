@@ -14,7 +14,7 @@ var mp3Duration = require('mp3-duration');
 //var jquery = require('jquery')
 
 app = express();
-app.set('port', 3002);
+app.set('port', 3001);
 
 // setup handlebars and the view engine for res.render calls
 // (more standard to use an extension like 'hbs' rather than
