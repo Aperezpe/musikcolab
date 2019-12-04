@@ -12,19 +12,14 @@
 </head>
 
 <body class="background">
-
   <div class="layer">
     <div class="container">
 
       <div class="row justify-content-md-center mt-5">
-
+        <!-- <div id="logo"> <img src="img/MusikColab-logo.png"> </div> -->
         <div class="card" style="width: 23rem;">
-
-          <div class="text-center">
-            <span class="signup-text">JOIN:</span><img id="img-size" src="img/MusikColab-logo.png"> </div>
           <div class="card-body">
-
-
+            <h3 class="card-title">Sign Up</h3>
 
             <form method="POST" action='/register'>
 
@@ -67,8 +62,8 @@
               </div>
               {{/errors}}
 
-              <button type="submit" name="b" value="reg" class="btn btn-primary">Continue</button>
-              <div class="signin-text">Already a member?
+              <button type="submit" name="b" value="reg" class="btn btn-primary">Sign Up</button>
+              <div class="signup-text">Already a member?
                 <a href="/login"><span id="login-link">Login</span></a></div>
             </form>
           </div>

@@ -20,14 +20,6 @@
     {{>navbar}}
     {{>modal}}
 
-    {{#if successMsg}}
-    <div class="alert alert-success" id="success-alert">
-        <button type="button" class="close" data-dismiss="alert">x</button>
-        <strong>Success!</strong> {{successMsg}}
-    </div>
-    {{/if}}
-
-
 
     <!-- Button trigger modal -->
     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
@@ -48,7 +40,7 @@
 
         <form action="/profile/{{id}}" method="POST">
             <div class="form-group row">
-                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Artist Name</label>
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Artis Name</label>
                 <div class="col-sm-10">
                     <input class="form-control form-control-lg" id="colFormLabelLg" value="{{artist_name}}" name="artist_name">
                 </div>
@@ -74,6 +66,20 @@
         </form>
 
     </div>
+
+    <a id="anchor-bottom" name="anchor-bottom"></a>
+
+    {{#if successMsg}}
+    <div class="alert alert-success" id="success-alert">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <strong>Success!</strong> {{successMsg}}
+    </div>
+    {{/if}}
+    {{#if anchor}}
+    <script>
+        window.onload = window.location.hash = '#{{anchor}}';
+    </script>
+    {{/if}}
 </body>
 
 </html>

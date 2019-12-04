@@ -55,12 +55,6 @@ app.get('/album/:username', function (req, res, next) {
 });//END route '/album/:username'
 //===============================================================
 
-app.get('/testing', function (req, res, next) {
-  // let rawdata = fs.readFileSync('./static/cristovive.json');
-  // let student = JSON.parse(rawdata)
-  res.render('test')
-});
-
 //ARMANDOS-----------------------------------------------------
 //Log in get and post
 app.get('/login', function (req, res, next) {
@@ -73,7 +67,6 @@ app.get('/login', function (req, res, next) {
     res.render("login");
 
 });
-
 app.post('/login', function (req, res, next) {
 
   let errors = []
@@ -91,8 +84,9 @@ app.post('/login', function (req, res, next) {
         bcrypt.compare(req.body.pass, user.has_password).then(result => {
 
           if (result) {
-            req.session.user = user;
-            res.redirect("/");
+            req.session.curUser = {}
+            req.session.curUser["username"] = user.username;
+            res.redirect("/profile");
           }
 
           else {
@@ -154,24 +148,48 @@ app.post('/register', function (req, res, next) {
       return;
     } else {
       //bcrypt password hashing function 
-      console.log('erwer')
+      // console.log('erwer')
 
-      console.log('test')
+      // console.log('test')
+
+      var hash_pass = bcrypt.hashSync(req.body.password, 10)
       // req.session.hash = hash;
       // req.session.user = req.body.username.trim(),
       //CREATE new user,
       //THEN redirect user to 'home' view
+
+      //Problem was allowNull D: idk why
       User.create({
         artist_name: req.body.artistname,
         username: req.body.username,
         email: req.body.email,
-        has_password: bcrypt.hashSync(req.body.password, 10),//bcrypt.hashSync(req.body.password, 10),
+        has_password: hash_pass,
         admin: false
-      }).then(newUser => {
+      },
+      ).then(newUser => {
+        //console.log("FUCK")
+
+        console.log("newUser id:" + newUser.id)
         req.session.curUser = {}
         req.session.curUser["username"] = newUser.username
+
         res.redirect("/profile");
-      });//END create-user ;
+
+        // Album.create({
+        //   username: newUser.username
+        // })
+        //   .then(newAlbum => {
+        //     req.session.curUser = {}
+        //     req.session.curUser["username"] = newUser.username
+        //     res.redirect("/profile");
+        //   })
+        //   .catch(err => console.log(err))
+
+      })
+        .catch(err => console.log(err))
+      //END create-user ;
+
+      ///res.redirect("/profile");
     }
   });
   //END create-user function
@@ -181,15 +199,22 @@ app.post('/register', function (req, res, next) {
 //==============================================================
 
 //ABRAHAMS------------------------------------------------------
+app.get('/logout', function (req, res) {
+
+  req.session.destroy()
+
+  res.redirect("/login")
+})
+
 app.get('/create_session', function (req, res, next) {
 
   req.session.curUser = {}
-  req.session.curUser["id"] = 2
-  console.log("user_id:" + req.session.curUser["id"])
+  req.session.curUser["username"] = "abe123"
+  console.log("user_id:" + req.session.curUser["username"])
 
   User.findOne({
     where: {
-      id: req.session.curUser["id"]
+      username: req.session.curUser["username"]
     }
   }).then(user => {
 
@@ -206,20 +231,17 @@ app.get('/create_session', function (req, res, next) {
 app.get('/profile', function (req, res) {
 
   successMsg = ""
+  anchor = ""
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
   var username = req.session.curUser["username"]
 
-  if (!username) {
-    res.render('profile')
-    return;
-  }
-
   if (req.query.success == "info") {
+    anchor = "anchor-bottom"
     successMsg = "You have updated your profile information"
   } else if (req.query.success == "true") {
     successMsg = "You have updated your profile picture"
@@ -244,7 +266,8 @@ app.get('/profile', function (req, res) {
       username: user.name,
       email: user.email,
       about: user.about,
-      id: user.id
+      id: user.id,
+      anchor: anchor
     })
   });
 
@@ -278,11 +301,13 @@ app.post('/profile/:id', function (req, res) {
   res.redirect('/profile?success=info')
 })
 
+//https://images.ctfassets.net/usf1vwtuqyxm/3SQ3X2km8wkQIsQWa02yOY/8801d7055a3e99dae8e60f54bb4b1db8/HarryPotter_WB_F4_HarryPotterMidshot_Promo_080615_Port.jpg?w=914
+
 /////UPDATE IMAGE URL ///////
 app.post('/update_profile_img', function (req, res, next) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -299,7 +324,7 @@ app.post('/update_profile_img', function (req, res, next) {
       } else {
         res.session.errors = []
         res.session.errors.push("There was an error uploading the image")
-        res.redirect('profile')
+        res.redirect('/profile')
 
       }
     })
@@ -312,8 +337,8 @@ app.post('/update_profile_img', function (req, res, next) {
 
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
   var username = req.session.curUser["username"]
@@ -353,8 +378,8 @@ app.get('/update_json_songs', function (req, res) {
 // UPDATE ALBUM COVER
 app.post('/update_album_cover', function (req, res, next) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -371,6 +396,9 @@ app.post('/update_album_cover', function (req, res, next) {
     }
   })
     .then(album => {
+
+
+
       album.update({ album_cover: new_image_url })
         .then(function (album) {
           if (album.album_cover == new_image_url) {
@@ -398,8 +426,8 @@ app.post('/update_album_cover', function (req, res, next) {
 //Update album information
 app.post('/profile-album/:id', function (req, res) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -428,11 +456,15 @@ app.post('/profile-album/:id', function (req, res) {
 
     // })
 
-    Album.findAll({
-      where: { id: album_id }
+
+    Album.findOne({
+      where: { id: album_id },
+      include: [{ model: Song, as: 'Songs' }]
     }).then(album => {
 
-      album[0].update({
+      //console.log(JSON.stringify(album, null, 4))
+
+      album.update({
         artist_name: req.body.artist_name,
         album_name: req.body.album_name,
         username: req.body.username,
@@ -441,8 +473,20 @@ app.post('/profile-album/:id', function (req, res) {
         console.log(JSON.stringify(album, null, 4))
         console.log("si jalo!!")
         //res.redirect('/profile-album')
+
+
+
       })
 
+      Song.bulkCreate(req.session.song_list, { returning: true }).then(function () {
+        console.log("Songs successfully created")
+      })
+        .catch(err => console.log(err))
+
+
+
+
+      console.log('Routing TO: /profile-album?success=album')
       res.redirect('/profile-album?success=album')
       // album.update({
       //   artist_name: req.body.artist_name,
@@ -454,6 +498,7 @@ app.post('/profile-album/:id', function (req, res) {
       //   res.redirect('/profile-album')
       // })
     })
+      .catch(err => console.log(err))
 
     // if(album_promise&&song_promise){
     //   res.redirect("/profile-album")
@@ -476,10 +521,12 @@ app.get('/profile-album', function (req, res) {
   anchor = ""
   console.log("success: " + req.query.success)
 
-  if (!req.session.curUser["username"]) {
-    res.send("User needs to logg in")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
+
+  //console.log(req.query.success)
 
   if (req.query.success != "song") {
     if (req.session.song_list != undefined) {
@@ -489,10 +536,13 @@ app.get('/profile-album', function (req, res) {
   }
 
   if (req.query.success == "song") {
+    console.log("updating songs...")
     successMsg = "The song was successfully added"
     anchor = "anchor-songs"
-  } else if (req.query.albumSuccess == "album") {
-    albumSuccessMsg = "Your album was successfully updated"
+  } else if (req.query.success == "album") {
+    console.log("updating album...")
+    anchor = "anchor-songs"
+    successMsg = "Your album was successfully updated"
   }
 
   var username = req.session.curUser["username"]
@@ -508,9 +558,23 @@ app.get('/profile-album', function (req, res) {
 
   }).then(user => {
 
-    console.log(JSON.stringify(user, null, 4))
-
     var album = user.Albums[0]
+
+    if (!album) {
+
+      Album.create({
+        user_id: user.id,
+        username: user.username
+      }).then(album => {
+        console.log("Successfully created album!")
+        res.redirect('profile')
+        return;
+      })
+        .catch(err => console.log(err))
+
+      return;
+    }
+
     var songs = user.Albums[0]["Songs"]
 
     if (album.album_cover == null) {
@@ -542,6 +606,7 @@ app.get('/profile-album', function (req, res) {
     })
 
   })
+    .catch(err => console.log(err))
 
 });
 
@@ -551,8 +616,8 @@ app.get('/profile-album', function (req, res) {
 /////UPLOAD NEW SONG
 app.post("/upload_song/:album_id", function (req, res) {
 
-  if (!req.session.curUser["username"]) {
-    res.send("No user")
+  if (!req.session.curUser) {
+    res.redirect('/login')
     return;
   }
 
@@ -571,31 +636,9 @@ app.post("/upload_song/:album_id", function (req, res) {
     "song_url": req.body.song_url,
   })
 
-  res.redirect('/profile-album?albumSuccess=song')
+  res.redirect('/profile-album?success=song')
 
   console.log(req.session.song_list)
-
-
-  // req.session.song_list = [{}]
-
-
-  // Song.create({
-  //   song_title: req.body.song_title,
-  //   album_id: album_id,
-  //   duration: "0:00",
-  //   song_url: req.body.song_url,
-  //   like_count: 0
-
-  // })
-  // .then(newSong=>{
-  //   //console.log()
-  //   res.send(JSON.stringify(newSong, null, 4))
-  // })
-
-
-
-
-
 
 })
 
