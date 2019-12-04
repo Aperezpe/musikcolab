@@ -1,6 +1,6 @@
 // import the models
 // const { User } = require('./models');
-const { User, Album, Song, Song_likes } = require("./models");
+const { User, Album, Song, Song_likes } = require('./models');
 
 const express = require("express");
 const path = require("path");
@@ -36,7 +36,7 @@ app.use(session({ secret: "This is a big long secret lama string." }));
 app.use(express.static(path.join(__dirname, "static")));
 
 //Log in get and post
-app.get("/login", function(req, res, next) {
+app.get("/login", function (req, res, next) {
   if (req.session.user) {
     if (req.session.user.admin == 0 || req.session.user.admin == 1) {
       res.redirect("/");
@@ -44,7 +44,7 @@ app.get("/login", function(req, res, next) {
   } else res.render("login");
 });
 
-app.post("/login", function(req, res, next) {
+app.post("/login", function (req, res, next) {
   let errors = [];
   if (req.body.username.length == 0 || req.body.pass.length == 0) {
     errors.push({ msg: "Uername or Password Incorect!!!" });
@@ -70,7 +70,7 @@ app.post("/login", function(req, res, next) {
 });
 
 //Register get and post page
-app.get("/register", function(req, res, next) {
+app.get("/register", function (req, res, next) {
   if (req.session.user) {
     if (req.session.user.admin == 0 || req.session.user.admin == 1) {
       res.redirect("/");
@@ -78,7 +78,7 @@ app.get("/register", function(req, res, next) {
   } else res.render("register");
 });
 
-app.post("/register", function(req, res, next) {
+app.post("/register", function (req, res, next) {
   let errors = [];
   if (req.body.username.length == 0) {
     errors.push({ msg: "Username not provide" });
@@ -110,7 +110,7 @@ app.post("/register", function(req, res, next) {
 });
 
 // Display all teh users just for testing
-app.get("/all_users", function(req, res, next) {
+app.get("/all_users", function (req, res, next) {
   if (req.session.user) {
     if (req.session.user.admin) {
       User.findAll().then(user => {
@@ -121,12 +121,12 @@ app.get("/all_users", function(req, res, next) {
 });
 
 //test
-app.get("/", function(req, res, next) {
+app.get("/", function (req, res, next) {
   //console.log("Hola" + req.session.user);
   res.render("home");
 });
 
-app.post("/where", function(req, res, next) {
+app.post("/where", function (req, res, next) {
   if (req.body.b == "login") res.redirect("/login");
   else if (req.body.b == "users") res.redirect("/all_users");
   else if (req.body.b == "reg") res.redirect("/register");
@@ -137,6 +137,6 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-var server = app.listen(app.get("port"), function() {
+var server = app.listen(app.get("port"), function () {
   console.log("Server started...");
 });
