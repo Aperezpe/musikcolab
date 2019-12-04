@@ -162,10 +162,10 @@ app.post('/register', function (req, res, next) {
             username: req.body.username.trim(),
             email: req.body.email.trim(),
             has_password: hash, // bcrypt.hashSync(pw, 10)
-            'admin': false
+            admin: false
           }).then(newUser => {
             req.session.user = newUser;
-            res.render("/");
+            res.redirect("/");
           });//END create-user function
       });//END bcrypt.hash function
     }//END IF-ELSE (If errors exist, Else: no errors )
