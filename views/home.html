@@ -1,82 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Music</title>
-  </head>
-  <link rel="stylesheet" href="/home.css" />
 
-  <body style="background-color: plum;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-      <a class="navbar-brand" href="#">Musikcolab</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+<head>
+  <title>Music</title>
+</head>
+<link rel="stylesheet" href="/home.css" />
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/profile?user_id={{id}}"
-              >Profile<span class="sr-only">(current)</span></a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/profile-album?user_id={{id}}">Album</a>
-          </li>
+<body style="background-color: white;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/"> <img class="logo" src="musikcolab.png"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-        </ul>
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a style="color:white" href="/logout"><em>logout</em></a>
-          </li>
-        </ul>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/profile?user_id={{id}}">Profile<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile-album?user_id={{id}}">Album</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+      </ul>
+      <li class="nav-item active">
+        <a style="color:white" href="/logout"><em>Logout</em></a>
+      </li>
+    </div>
+  </nav>
+  <form class="back" method="POST" action="/where">
+    <div>
+      <div id="title">
+        <img style="width: 500px;" id="logo" src="musikcolab.png">
       </div>
-    </nav>
-    <form method="POST" action="/where">
-      <div>
-        <div id="title">
-          <h1>Musikcolab</h1>
+      <div style="width: 100%;">
+        <!-- <div class="d-inline-block" style="width: 33%;">
+          <svg src="undraw_compose_music_ovo2.svg"></svg>
+          <img src="undraw_music_r1se.png" alt="Trulli" width="500" height="333" class="img-fluid" />
+        </div> -->
+        <div id="card" class="card-img-top">
+          <p>
+            Welcome to Musikcolab</br> The best place to colborate and share with other people the next big hits.</br>
+            “Please go for your dreams. Whatever your ideals, you can become
+            whatever you want to become.” -Michael Jackson
+          </p>
         </div>
-        <div style="width: 100%;">
-          <div class="d-inline-block" style="width: 33%;">
-            <img
-              src="undraw_music_r1se.png"
-              alt="Trulli"
-              width="500"
-              height="333"
-              class="img-fluid"
-            />
-          </div>
-          <div
-            class="d-inline-block"
-            style="width: 33%; padding: 20px; background-color: #007bff;"
-          >
-            <p>
-              “Please go for your dreams. Whatever your ideals, you can become
-              whatever you want to become.” -Michael Jackson
-            </p>
-          </div>
-          <div class="d-inline-block" style="width: 32%;">
-            <img
-              src="undraw_compose_music_ovo2.png"
-              alt="Trulli"
-              width="500"
-              height="333"
-              class="img-fluid"
-            />
-          </div>
-        </div>
+        <!-- <div class="d-inline-block" style="width: 32%;">
+          <img src="undraw_compose_music_ovo2.png" alt="Trulli" width="500" height="333" class="img-fluid" />
+        </div> -->
       </div>
-    </form>
-  </body>
+    </div>
+  </form>
+</body>
+
 </html>

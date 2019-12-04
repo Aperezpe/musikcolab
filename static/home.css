@@ -1,3 +1,24 @@
 #title {
   text-align: center;
 }
+
+body {
+  background: url(fallback.png);
+  background-image: url(undraw_compose_music_ovo2.svg), none;
+}
+
+#card{
+  width: 30%;
+  padding: 17px;
+  color: white;
+  background-color: #007bff;
+  text-align: center;
+  border: 5px solid black;
+  margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
+
+.logo{
+  width: 225px;
+}
