@@ -20,14 +20,6 @@
     {{>navbar}}
     {{>modal}}
 
-    {{#if successMsg}}
-    <div class="alert alert-success" id="success-alert">
-        <button type="button" class="close" data-dismiss="alert">x</button>
-        <strong>Success!</strong> {{successMsg}}
-    </div>
-    {{/if}}
-
-
 
     <!-- Button trigger modal -->
     <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
@@ -51,7 +43,8 @@
             <div class="form-group row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Artis Name</label>
                 <div class="col-sm-10">
-                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{artist_name}}" name="artist_name">
+                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{artist_name}}"
+                        name="artist_name">
                 </div>
             </div>
             <!-- <div class="form-group row">
@@ -63,18 +56,34 @@
             <div class="form-group row">
                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Email</label>
                 <div class="col-sm-10">
-                    <input name="email" type="email" class="form-control form-control-lg" id="colFormLabelLg" value="{{email}}">
+                    <input name="email" type="email" class="form-control form-control-lg" id="colFormLabelLg"
+                        value="{{email}}">
                 </div>
             </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1" class="col-form-label-lg">About</label>
-                <textarea name="about" rows="10" class="form-control" id="exampleFormControlTextarea1" rows="3">{{about}}</textarea>
+                <textarea name="about" rows="10" class="form-control" id="exampleFormControlTextarea1"
+                    rows="3">{{about}}</textarea>
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
 
     </div>
+
+    <a id="anchor-bottom" name="anchor-bottom"></a>
+    
+    {{#if successMsg}}
+    <div class="alert alert-success" id="success-alert">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <strong>Success!</strong> {{successMsg}}
+    </div>
+    {{/if}}
+    {{#if anchor}}
+    <script>
+        window.onload = window.location.hash = '#{{anchor}}';
+    </script>
+    {{/if}}
 </body>
 
 </html>
