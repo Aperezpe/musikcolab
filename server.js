@@ -1,7 +1,3 @@
-
-// var foo = require('./static/cristovive.json');
-const fs = require('fs');
-
 const { User, Album, Song, Song_likes } = require('./models');
 
 const express = require('express');
@@ -55,7 +51,7 @@ app.get('/album/:username', function (req, res, next) {
     });
   });
 });//END route '/album/:username'
-//------------------------------------------------------
+//===============================================================
 
 app.get('/testing', function (req, res, next) {
   // let rawdata = fs.readFileSync('./static/cristovive.json');
@@ -66,52 +62,95 @@ app.get('/testing', function (req, res, next) {
 
 //Log in get and post
 app.get('/login', function (req, res, next) {
-  res.render("login");
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
+  else
+    res.render("login");
+
 });
 
 app.post('/login', function (req, res, next) {
-  res.render("login");
+
+  let errors = []
+  if (req.body.username.length == 0 || req.body.pass.length == 0) {
+    errors.push({ msg: "Uername or Password Incorect!!!" })
+    res.render("login", { errors });
+  }
+  else {
+    User.findOne({ where: { username: req.body.username } }).then(user => {
+      if (user == null) {
+        errors.push({ msg: "Username or Password Incorect!!!" })
+        res.render("login", { errors });
+      }
+      else {
+        bcrypt.compare(req.body.pass, user.has_password).then(result => {
+
+          if (result) {
+            req.session.user = user;
+            res.redirect("/");
+          }
+
+          else {
+            errors.push({ msg: "Username or Password Incorect!!!" })
+            res.render("login", { errors });
+          }
+        })
+      }
+    });
+  }
 
 });
 
 
 //Register get and post page 
 app.get('/register', function (req, res, next) {
-  res.render("register");
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
+  else
+    res.render("register");
 
 });
 
 app.post('/register', function (req, res, next) {
-  res.render("register");
+  let errors = []
+  if (req.body.username.length == 0) {
+    errors.push({ msg: "Username not provide" })
+  }
+  if (req.body.pass.length < 4) {
+    errors.push({ msg: "Password conot be less that 4 characters" })
+  }
+  User.findOne({ where: { username: req.body.username } }).then(user => {
+    n_user = user;
+    if (n_user == null) {
+      if (errors.length == 0) {
 
-});
+        User.create({
+          username: req.body.username,
+          artist_name: req.body.artistname,
+          has_password: bcrypt.hashSync(req.body.pass, 10),
+          email: req.body.email,
+          admin: false
+        });
+      }
+      res.redirect("/login");
+    }
+    else if (req.body.username == n_user.username) {
 
+      errors.push({ msg: "Username Not Avilable!!!" })
 
-// Display all teh users just for testing
-app.get('/all_users', function (req, res, next) {
-  User.findAll().then(user => {
-    res.render("test", { user: user });
-  });
-});
-
-
-
-//test
-app.get('/', function (req, res, next) {
-  res.render("home");
-
-});
-
-app.post('/where', function (req, res, next) {
-
-  if (req.body.b == "login")
-    res.redirect("/login");
-
-  else if (req.body.b == "users")
-    res.redirect("/all_users");
-
-  else if (req.body.b == "reg")
-    res.redirect("/register");
+    }
+    else {
+      let us = req.body.username;
+      res.render("register", { errors, us });
+    }
+  })
+  //res.render("register");
 
 });
 

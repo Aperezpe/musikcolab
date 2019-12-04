@@ -43,19 +43,17 @@ for (var i = 0; i < songElements.length; i++) {
 }
 
 
-//Split 
+//PROMISE: split url first in order to get 'album username' 
 let getUrl = new Promise(function (resolve, reject) {
 	var pathArray = window.location.pathname.split('/');
 	resolve(pathArray[2])
 });
-
+//Once promise completes, make json call 
 getUrl.then(function (result) {
 	var albumName = result + ".json"
 
 	$.ajax(albumName).done(function (data) {
-		console.log(data)
 		Amplitude.init({ "songs": data });
-
 	});
 
 });
