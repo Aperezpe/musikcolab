@@ -275,7 +275,7 @@ app.post('/update_profile_img', function (req, res, next) {
 
 ////THIS WILL BE DONE ONLY ONCE/////
 app.get('/update_json_songs', function (req, res) {
-  if (!req.session.curUser["username"]) {
+  if (!req.session.curUser) {
     res.send("User needs to logg in")
     return;
   }
@@ -294,16 +294,16 @@ app.get('/update_json_songs', function (req, res) {
     var album = user.Albums[0]
     var s = user.Albums[0]["Songs"]
 
-    var songs = []
+    var songsJson = []
     for (var i = 0; i < s.length; ++i) {
-      songs.push({ "url": s[i]["song_url"] })
+      songsJson.push({ "url": s[i]["song_url"] })
     }
-    console.log(songs)
+    console.log(songsJson)
 
-    let data = JSON.stringify(songs, null, 2);
+    let data = JSON.stringify(songsJson, null, 2);
     fs.writeFileSync(`static/album/${album.username}.json`, data);
 
-    res.send(JSON.stringify(songs, null, 4))
+    res.send(JSON.stringify(songsJson, null, 4))
 
   })
 
@@ -661,7 +661,7 @@ app.post('/profile-album/:id', function (req, res) {
   } else if (req.body.delete_btn != undefined) {
     console.log("Delete button")
   } else {
-    console.log("HERE MODAFUKAR")
+    // console.log("HERE MODAFUKAR")
     // console.log("Save button")
 
     // console.log(req.session.song_list)
@@ -793,6 +793,15 @@ app.get('/profile-album', function (req, res) {
     if (album.album_cover == null) {
       album.album_cover = "http://cdn.last.fm/flatness/responsive/2/noimage/default_album_300_g4.png";
     }
+
+    // var songsJson = []
+    // for (var i = 0; i < songs.length; ++i) {
+    //   songsJson.push({ "url": songs[i]["song_url"] })
+    // }
+    // console.log(songsJson)
+
+    // let data = JSON.stringify(songsJson, null, 2);
+    // fs.writeFileSync(`static/album/${album.username}.json`, data);
 
     //Every time I get the songs, update json file
 
