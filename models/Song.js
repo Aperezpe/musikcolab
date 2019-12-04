@@ -9,10 +9,14 @@ module.exports = function(sequelize, DataTypes) {
     },
     album_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {
+        model: 'album',
+        key: 'id'
+      }
     },
-    length_track: {
-      type: DataTypes.TEXT,
+    duration: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
     song_url: {
@@ -27,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    use: {
+    song_title: {
       type: DataTypes.TEXT,
       allowNull: true
     }

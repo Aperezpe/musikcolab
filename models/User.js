@@ -1,13 +1,13 @@
 /* jshint indent: 2 */
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('user', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    name: {
+    artist_name: {
       type: DataTypes.TEXT,
       allowNull: true
     },
@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     },
     profile_pic: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: true
     },
     profile_video: {
@@ -27,9 +27,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    artist_name: {
+    username: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
     },
     use: {
       type: DataTypes.TEXT,
@@ -37,11 +37,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     has_password: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
     },
     admin: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: false
     }
   }, {
     tableName: 'user',

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/album.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Profile</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Musikcolab</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile?user_id={{user.id}}">Profile<span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/profile-album?user_id={{user.id}}">Album</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/create_session">Login</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+    {{#if success}}
+    <div class="alert alert-success" id="success-alert">
+        <button type="button" class="close" data-dismiss="alert">x</button>
+        <strong>Success!</strong> The image was successfully updated
+    </div>
+    {{/if}}
+    
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Hello, {{user.artist_name}}</h1>
+            {{>modal}}
+        </div>
+
+        <div class="pro-img">
+            <a href='#'>
+                <img data-toggle="modal" data-target="#exampleModalCenter" src="{{album.album_cover}}" alt=""
+                    class="album-img">
+
+            </a>
+
+        </div>
+
+
+        <form action="/profile-album" method="POST">
+            <div class="form-group row">
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Album Title</label>
+                <div class="col-sm-10">
+                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{album.album_name}}"
+                        placeholder="Album Title...">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Album Username</label>
+                <div class="col-sm-10">
+                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{album.username}}"
+                        placeholder="Album Title...">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Genere</label>
+                <div class="col-sm-10">
+                    <input class="form-control form-control-lg" id="colFormLabelLg" value="{{album.genre}}">
+                </div>
+            </div>
+
+            <!-- <div class="form-group row">
+                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Songs</label>
+
+                <div class="input-group mb-2 col-sm-10">
+                    <input type="text" class="form-control form-control-lg" placeholder="Song URL" name="song_url">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit" name="add_btn"> Add </button>
+                    </div>
+                </div>
+
+            </div> -->
+
+            <!-- Editable table -->
+            <div class="card">
+                <div class="card-header container-fluid">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h3 class="w-75 p-3">SONGS</h3>
+                        </div>
+                        <div class="col-md-2 float-right">
+                            <button type="button" class="btn-add" data-toggle="modal" data-target="#exampleModalCenter1"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="table" class="table-editable">
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">URL</th>
+                                    <th scope="col">Duration</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#songs}}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>{{song_title}}</td>
+                                    <td>{{song_url}}</td>
+                                    <td>{{duration}}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <button type="submit" class="btn1 btn-primary" name="edit_btn">Edit</button>
+                                            <button type="submit" class="btn2 btn-secondary btn-danger"
+                                                name="delete_btn">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {{/songs}}
+
+
+                                <!-- <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td colspan="2">Larry the Bird</td>
+                                    <td>@twitter</td>
+                                    <td>@mdo</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Editable table -->
+
+            <button type="submit" class="btn btn-primary" name="btn-save">Save</button>
+        </form>
+        
+        <audio src="https://musikcolab.s3.amazonaws.com/01_Heroe+(feat.+Sesi).mp3">Heroe song</audio>
+
+
+
+
+
+    </div>
+</body>
+
+</html>

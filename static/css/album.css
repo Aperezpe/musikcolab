@@ -1,0 +1,87 @@
+.album-img {
+    margin: 50px;
+    /* overflow: hidden;  */
+    width: 250px;
+    margin: auto;
+    display: block;
+}
+
+.list-group {
+    font-size: 16px;
+    /* margin:auto; */
+    margin-left: 10px;
+}
+
+.pt-3-half {
+    padding-top: 1.4rem;
+}
+
+table {
+    font-size: 16px;
+}
+
+.btn1 {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.btn2 {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+i {
+    color: #4BB543;
+    font-size: 40px !important;
+    vertical-align: middle;
+    /* box-shadow: 0 4px 5px 0px rgba(0, 0, 0, .3); */
+}
+
+.btn-add:hover {
+    color: rgb(103, 170, 224);
+    border: none;
+    outline: none;
+    border-radius: 50px;
+}
+
+.btn-add {
+
+    margin-left:23px;
+    margin-top:5px;
+    /* box-shadow: 0 4px 5px 0px rgba(0, 0, 0, .3); */
+    border: none;
+    outline: none;
+    background-color: transparent;
+    /* Remove borders */
+    border-radius: 50px;
+    color: white;
+    /* White text */
+    padding: 12px 16px;
+    /* Some padding */
+    font-size: 16px;
+    /* Set a font size */
+    cursor: pointer;
+    /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+
+i:hover {
+    color: #4BE543;
+}
+
+i:active {
+    color: #4BE543;
+}
+
+
+.song-upload-modal{
+    height: 320px;
+}
+
