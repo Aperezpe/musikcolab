@@ -54,6 +54,13 @@
   padding-right: 0.4rem;
 }
 
+.signin-text {
+  font-size: 0.9rem;
+  color: white;
+  text-align: center;
+  padding-top: 0.6rem;
+}
+
 #login-link {
   text-decoration: underline;
   color: white;

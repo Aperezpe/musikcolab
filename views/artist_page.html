@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Include Style Sheet -->
     <link rel="stylesheet" type="text/css" href="css/app.css" />
+    <link rel="stylesheet" type="text/css" href="css/albumcss.css" />
 
 </head>
 
@@ -70,9 +71,13 @@
                             <span data-amplitude-song-info="artist">
                             </span>
                             <span data-amplitude-song-info="album"></span>
+
                         </div>
+
                     </div>
+
                 </div>
+                <a href="download.php?url={{data.download_url}}" class="dl-all">Download All</a>
             </div>
             <!-- End Left Side Player -->
 
@@ -105,17 +110,12 @@
                 {{/each}}
                 <!-- END SONG 1 -->
 
-
                 <!-- End Right Side Player -->
             </div>
             <!-- End Amplitdue Player -->
         </div>
 
-        <!--
-			Include UX functions JS
 
-			NOTE: These are for handling things outside of the scope of AmplitudeJS
-		-->
         <script type="text/javascript" src="js/functions.js"></script>
 </body>
 
