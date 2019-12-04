@@ -29,7 +29,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // set up session (in-memory storage by default)
 app.use(session({ secret: "This is a big long secret lama string." }));
-
 // setup static file service
 app.use(express.static(path.join(__dirname, 'static')));
 
@@ -37,12 +36,18 @@ app.use(express.static(path.join(__dirname, 'static')));
 
 //Log in get and post
 app.get('/login', function (req, res, next) {
-
-  res.render("login");
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
+  else
+    res.render("login");
 
 });
 
 app.post('/login', function (req, res, next) {
+
   let errors = []
   if (req.body.username.length == 0 || req.body.pass.length == 0) {
     errors.push({ msg: "Uername or Password Incorect!!!" })
@@ -76,7 +81,13 @@ app.post('/login', function (req, res, next) {
 
 //Register get and post page 
 app.get('/register', function (req, res, next) {
-  res.render("register");
+  if (req.session.user) {
+    if (req.session.user.admin == 0 || req.session.user.admin == 1) {
+      res.redirect("/")
+    }
+  }
+  else
+    res.render("register");
 
 });
 
@@ -99,12 +110,9 @@ app.post('/register', function (req, res, next) {
           has_password: bcrypt.hashSync(req.body.pass, 10),
           email: req.body.email,
           admin: false
-
-
         });
       }
-      req.session.user = user;
-      res.redirect("/");
+      res.redirect("/login");
     }
     else if (req.body.username == n_user.username) {
 
@@ -123,16 +131,24 @@ app.post('/register', function (req, res, next) {
 
 // Display all teh users just for testing
 app.get('/all_users', function (req, res, next) {
-  User.findAll().then(user => {
-    res.render("test", { user: user });
-  });
+  if (req.session.user) {
+    if (req.session.user.admin) {
+      User.findAll().then(user => {
+        res.render("test", { user: user });
+      });
+    }
+    else
+      res.redirect("/login")
+  }
+  else
+    res.redirect("/login")
 });
 
 
 //test
 app.get('/', function (req, res, next) {
-  res.render("hola");
-
+  console.log("Hola" + req.session.user);
+  res.render("home")
 });
 
 app.post('/where', function (req, res, next) {
@@ -148,6 +164,11 @@ app.post('/where', function (req, res, next) {
 
 
 
+});
+app.get('/logout', (req, res) => {
+  // remove user from session
+  delete req.session.user;
+  res.redirect('/');
 });
 
 var server = app.listen(app.get('port'), function () {
