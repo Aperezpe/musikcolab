@@ -18,60 +18,64 @@
       <div class="row justify-content-md-center mt-5">
         <!-- <div id="logo"> <img src="img/MusikColab-logo.png"> </div> -->
         <div class="card" style="width: 23rem;">
+          <div class="text-center">
+            <span class="signup-text">JOIN:</span><img id="img-size" src="img/MusikColab-logo.png"> </div>
           <div class="card-body">
-            <h3 class="card-title">Sign Up</h3>
 
-            <form method="POST" action='/register'>
+            <div class="card-body">
 
-              <!-- Artist name field -->
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <i class="fa fa-user-o icon"></i>
+
+              <form method="POST" action='/register'>
+
+                <!-- Artist name field -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <i class="fa fa-user-o icon"></i>
+                  </div>
+                  <input type="textbox" id="artistname" name="artistname" class="form-control" placeholder="Artist name" aria-label="Artist name" aria-describedby="basic-addon1">
                 </div>
-                <input type="textbox" id="artistname" name="artistname" class="form-control" placeholder="Artist name" aria-label="Artist name" aria-describedby="basic-addon1">
-              </div>
 
-              <!-- Username field -->
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <i class="fa fa-user icon"></i>
+                <!-- Username field -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <i class="fa fa-user icon"></i>
+                  </div>
+                  <input id="username" name="username" type="textbox" class="form-control" placeholder="Username" aria-label="Username" value="{{us}}" aria-describedby="basic-addon1">
                 </div>
-                <input id="username" name="username" type="textbox" class="form-control" placeholder="Username" aria-label="Username" value="{{us}}" aria-describedby="basic-addon1">
-              </div>
 
-              <!-- Email field -->
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <i class="fa fa-envelope icon"></i>
+                <!-- Email field -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <i class="fa fa-envelope icon"></i>
+                  </div>
+                  <input id="email" name="email" type="textbox" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
                 </div>
-                <input id="email" name="email" type="textbox" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
-              </div>
 
-              <!-- Password -->
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <i class="fa fa-key icon"></i>
+                <!-- Password -->
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <i class="fa fa-key icon"></i>
+                  </div>
+                  <input name="password" type="password" id="pass" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
                 </div>
-                <input name="password" type="password" id="pass" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
-              </div>
 
 
-              {{#errors}}
-              <div class="alert-danger p-2 mb-2">
-                {{this}}
-              </div>
-              {{/errors}}
+                {{#errors}}
+                <div class="alert-danger p-2 mb-2">
+                  {{this}}
+                </div>
+                {{/errors}}
 
-              <button type="submit" name="b" value="reg" class="btn btn-primary">Sign Up</button>
-              <div class="signup-text">Already a member?
-                <a href="/login"><span id="login-link">Login</span></a></div>
-            </form>
+                <button type="submit" name="b" value="reg" class="btn btn-primary">Sign Up</button>
+                <div class="signup-text">Already a member?
+                  <a href="/login"><span id="login-link">Login</span></a></div>
+              </form>
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
-  </div>
 
 </body>
 
