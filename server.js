@@ -448,7 +448,6 @@ app.post('/profile-album/:id', function (req, res) {
   } else if (req.body.delete_btn != undefined) {
     console.log("Delete button")
   } else {
-    console.log("HERE MODAFUKAR")
     // console.log("Save button")
 
     // console.log(req.session.song_list)
@@ -472,7 +471,7 @@ app.post('/profile-album/:id', function (req, res) {
       }).then(function (album) {
         console.log(JSON.stringify(album, null, 4))
         console.log("si jalo!!")
-        //res.redirect('/profile-album')
+        res.redirect('/profile-album')
 
 
 
